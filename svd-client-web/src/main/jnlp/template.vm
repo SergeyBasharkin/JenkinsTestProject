@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://svd.alta.ru/resources/" href="$outputFile">
+    <information>
+        <title>SvdClient</title>
+        <vendor>Alta-Soft OOO</vendor>
+        <homepage href="http://www.alta.ru"/>
+        <description>SvdClient</description>
+    </information>
+    <update check="always" policy="always"/>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.8+"/>
+        <property name="file.encoding" value="utf-8"/>
+
+        $dependencies
+    </resources>
+    <application-desc main-class="$mainClass">
+    </application-desc>
+</jnlp>

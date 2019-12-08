@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="svd-client-core" />
+        <module name="svd-client-rest" />
+        <module name="svd-client-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="svd-client" target="1.5" />
+      <module name="svd-client-core" target="1.8" />
+      <module name="svd-client-rest" target="1.8" />
+      <module name="svd-client-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

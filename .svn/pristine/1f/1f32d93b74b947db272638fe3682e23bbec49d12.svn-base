@@ -1,0 +1,4 @@
+server.port=8080
+spring.profiles.active=test
+svd.send.client-version=1.0.1
+svd.client.build-time = 01.03.2019

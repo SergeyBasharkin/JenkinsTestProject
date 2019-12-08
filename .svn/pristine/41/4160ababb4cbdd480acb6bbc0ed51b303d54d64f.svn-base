@@ -1,0 +1,4 @@
+svd.tray.img-path=/img/pic.png
+svd.tray.tooltip=SVD Client
+
+#test.generateCount = 50000

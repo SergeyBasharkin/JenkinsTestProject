@@ -1,0 +1,3 @@
+svd.client.db = ./test/data/configuration.xml
+
+svd.getDoc.fromEndpoint = direct:from

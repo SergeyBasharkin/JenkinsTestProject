@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.alta.svd.client.web</groupId>
+    <artifactId>svd-client-web</artifactId>
+    <version>3.1.1</version>
+    <packaging>jar</packaging>
+
+    <name>svd-client-web</name>
+    <description>Svd Client Web</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.15.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring.maven.prop.profile>Standalone</spring.maven.prop.profile>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>dd.MM.yyyy</maven.build.timestamp.format>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <!-- Svd Client REST -->
+
+        <dependency>
+            <groupId>ru.alta.svd.client.rest</groupId>
+            <artifactId>svd-client-rest</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <optional>true</optional>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <addResources>true</addResources>
+                            <profiles>
+                                <profile>test</profile>
+                            </profiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>Service</id>
+            <properties>
+                <spring.maven.prop.profile>Service</spring.maven.prop.profile>
+                <dist.dir>${project.basedir}/dist</dist.dir>
+                <dist.svcdir>${dist.dir}/service</dist.svcdir>
+                <build.bindir>${project.build.directory}/bin</build.bindir>
+                <winsvc.xml>${dist.svcdir}/${project.artifactId}.xml</winsvc.xml>
+                <winsvc.exe>${dist.svcdir}/${project.artifactId}.exe</winsvc.exe>
+                <winsvc.service.exe>java</winsvc.service.exe>
+                <winsvc.service.jar>${project.artifactId}-exec.jar</winsvc.service.jar>
+                <winsvc.service.description>${project.artifactId} Windows Service</winsvc.service.description>
+                <winsvc.service.log.mode>roll-by-size</winsvc.service.log.mode>
+                <winsvc.service.log.settings><![CDATA[
+                            <sizeThreshold>20000</sizeThreshold>
+                            <keepFiles>2</keepFiles>]]>
+                </winsvc.service.log.settings>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <storetype>${keystore.type}</storetype>
+                            <keystore>${keystore.path}</keystore>
+                            <alias>${keystore.alias}</alias>
+                            <storepass>${keystore.store.password}</storepass>
+                            <keypass>${keystore.key.password}</keypass>
+                            <tsa>${keystore.tsa}</tsa>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependency</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.sun.winsw</groupId>
+                                            <artifactId>winsw</artifactId>
+                                            <classifier>bin</classifier>
+                                            <version>2.1.2</version>
+                                            <type>exe</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${build.bindir}</outputDirectory>
+                                            <destFileName>winsw.exe</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>ru.yaal.maven</groupId>
+                        <artifactId>write-text-files-maven-plugin</artifactId>
+                        <version>1.0</version>
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <files>
+                                <file>
+                                    <path>${dist.dir}/application.properties</path>
+                                    <lines>
+                                        <line>
+                                            <![CDATA[
+svd.client.db = ./configuration.xml
+server.port=8081
+server.address=127.0.0.1
+]]>
+                                        </line>
+                                    </lines>
+                                </file>
+                                <file>
+                                    <path>${dist.dir}/setup-config.iss</path>
+                                    <lines>
+                                        <line>
+                                            <![CDATA[
+[Setup]
+AppName=SVD-Client
+AppVersion=${project.version}
+WizardStyle=modern
+DefaultDirName={autopf}\svd-client
+DefaultGroupName=Alta-Soft
+OutputBaseFilename= svd-client-setup
+Compression=lzma2
+SolidCompression=yes
+SetupIconFile=alta_logo.ico
+OutputDir=.
+
+[Languages]
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+
+[Files]
+Source: "service\*"; DestDir: "{app}\service"; check: JreCheck;
+Source: "${winsvc.service.jar}"; DestDir: "{app}\"; check: JreCheck;
+Source: "${dist.dir}/application.properties"; DestDir: "{app}\"; check: JreCheck;
+Source: "alta_logo.ico"; DestDir: "{app}\"; check: JreCheck;
+Source: "configuration.xml"; DestDir: "{app}\"; check: JreCheck;
+
+[Run]
+Filename: "{app}\service\${project.artifactId}.exe"; Parameters: "install"; Flags: shellexec waituntilterminated
+Filename: "{app}\service\${project.artifactId}.exe"; Parameters: "start"; Flags: shellexec
+
+[UninstallRun]
+Filename: "{app}\service\${project.artifactId}.exe"; Parameters: "stop"; Flags: shellexec waituntilterminated
+Filename: "{app}\service\${project.artifactId}.exe"; Parameters: "uninstall"; Flags: shellexec waituntilterminated
+
+[Icons]
+Name: {commondesktop}\SVD Client; Filename: http://127.0.0.1:8081; WorkingDir: {app}; IconFilename: {app}\alta_logo.ico;
+
+[Code]
+function IsDotNetDetected(version: string; service: cardinal): boolean;
+var
+    key, versionKey: string;
+    install, release, serviceCount, versionRelease: cardinal;
+    success: boolean;
+begin
+    versionKey := version;
+    versionRelease := 0;
+
+    if version = 'v1.1' then begin
+        versionKey := 'v1.1.4322';
+    end else if version = 'v2.0' then begin
+        versionKey := 'v2.0.50727';
+    end
+
+    else if Pos('v4.', version) = 1 then begin
+        versionKey := 'v4\Full';
+        case version of
+          'v4.5':   versionRelease := 378389;
+          'v4.5.1': versionRelease := 378675;
+          'v4.5.2': versionRelease := 379893;
+          'v4.6':   versionRelease := 393295;
+          'v4.6.1': versionRelease := 394254;
+          'v4.6.2': versionRelease := 394802;
+          'v4.7':   versionRelease := 460798;
+          'v4.7.1': versionRelease := 461308;
+          'v4.7.2': versionRelease := 461808;
+          'v4.8':   versionRelease := 528040;
+        end;
+    end;
+
+
+    key := 'SOFTWARE\Microsoft\NET Framework Setup\NDP\' + versionKey;
+
+    if Pos('v3.0', version) = 1 then begin
+        success := RegQueryDWordValue(HKLM, key + '\Setup', 'InstallSuccess', install);
+    end else begin
+        success := RegQueryDWordValue(HKLM, key, 'Install', install);
+    end;
+
+    if Pos('v4', version) = 1 then begin
+        success := success and RegQueryDWordValue(HKLM, key, 'Servicing', serviceCount);
+    end else begin
+        success := success and RegQueryDWordValue(HKLM, key, 'SP', serviceCount);
+    end;
+
+    if versionRelease > 0 then begin
+        success := success and RegQueryDWordValue(HKLM, key, 'Release', release);
+        success := success and (release >= versionRelease);
+    end;
+
+    result := success and (install = 1) and (serviceCount >= service);
+end;
+
+procedure DecodeVersion (verstr: String; var verint: array of Integer);
+var
+  i,p: Integer; s: string;
+begin
+  verint := [0,0,0,0];
+  i := 0;
+  while ((Length(verstr) > 0) and (i < 4)) do
+  begin
+    p := pos ('.', verstr);
+    if p > 0 then
+    begin
+      if p = 1 then s:= '0' else s:= Copy (verstr, 1, p - 1);
+      verint[i] := StrToInt(s);
+      i := i + 1;
+      verstr := Copy (verstr, p+1, Length(verstr));
+    end
+    else
+    begin
+      verint[i] := StrToInt (verstr);
+      verstr := '';
+    end;
+  end;
+
+end;
+
+function CompareVersion (ver1, ver2: String) : Integer;
+var
+  verint1, verint2: array of Integer;
+  i: integer;
+begin
+
+  SetArrayLength (verint1, 4);
+  DecodeVersion (ver1, verint1);
+
+  SetArrayLength (verint2, 4);
+  DecodeVersion (ver2, verint2);
+
+  Result := 0; i := 0;
+  while ((Result = 0) and ( i < 4 )) do
+  begin
+    if verint1[i] > verint2[i] then
+      Result := 1
+    else
+      if verint1[i] < verint2[i] then
+        Result := -1
+      else
+        Result := 0;
+    i := i + 1;
+  end;
+
+end;
+
+function InitializeSetup(): Boolean;
+var
+  ErrorCode: Integer;
+  JavaVer : String;
+  ResultJre : Boolean;
+  ResultNet : Boolean;
+begin
+    RegQueryStringValue(HKLM, 'SOFTWARE\JavaSoft\Java Runtime Environment', 'CurrentVersion', JavaVer);
+    ResultJre := false;
+    if Length( JavaVer ) > 0 then
+    begin
+        if CompareVersion(JavaVer,'1.8') >= 0 then
+        begin
+            ResultJre := true;
+        end;
+    end;
+    if ResultJre = false then
+    begin
+        MsgBox(#$414#$43b#$44f#$20#$440#$430#$431#$43e#$442#$44b#$20#$43a#$43b#$438#$435#$43d#$442#$430#$20#$442#$440#$435#$431#$443#$435#$442#$441#$44f#$20#$443#$441#$442#$430#$43d#$43e#$432#$438#$442#$44c#$20#$4a#$61#$76#$61#$20#$31#$2e#$38, mbInformation, MB_OK);
+        ShellExec('open',
+          'https://www.java.com/ru/',
+          '','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
+    end;
+    if not IsDotNetDetected('v3.5', 0) then begin
+        MsgBox(#$414#$43b#$44f#$20#$443#$441#$442#$430#$43d#$43e#$432#$43a#$438#$20#$43a#$43b#$438#$435#$43d#$442#$430#$20#$442#$440#$435#$431#$443#$435#$442#$441#$44f#$20#$4d#$69#$63#$72#$6f#$73#$6f#$66#$74#$20#$2e#$4e#$45#$54#$20#$46#$72#$61#$6d#$65#$77#$6f#$72#$6b#$20#$33#$2e#$35#$2e#$0a#$0a#$41f#$43e#$436#$430#$43b#$443#$439#$441#$442#$430#$20#$443#$441#$442#$430#$43d#$43e#$432#$438#$442#$435#$20#$435#$433#$43e#$20#$438#$20#$43f#$43e#$43f#$440#$43e#$431#$443#$439#$442#$435#$20#$437#$430#$43f#$443#$441#$442#$438#$442#$44c#$20#$443#$441#$442#$430#$43d#$43e#$432#$449#$438#$43a#$20#$43f#$43e#$432#$442#$43e#$440#$43d#$43e#$2e#$20#$41f#$43e#$441#$43b#$435#$20#$43d#$430#$436#$430#$442#$438#$44f#$20#$22#$41e#$43a#$22#$20#$431#$443#$434#$435#$442#$20#$43e#$442#$43a#$440#$44b#$442#$20#$441#$430#$439#$442#$20#$43e#$442#$43a#$443#$434#$430#$20#$43c#$43e#$436#$43d#$43e#$20#$441#$43a#$430#$447#$430#$442#$44c#$20#$43d#$443#$436#$43d#$443#$44e#$20#$432#$435#$440#$441#$438#$44e#$2e, mbInformation, MB_OK);
+        ResultNet := false;
+        ShellExec('open',
+          'https://www.microsoft.com/ru-ru/download/details.aspx?id=22',
+          '','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
+    end else
+        ResultNet := true;
+    result := ResultJre and ResultNet;
+end;
+
+function JreCheck : boolean;
+var version: String;
+begin
+  result := InitializeSetup();
+end;
+]]>
+                                        </line>
+                                    </lines>
+                                </file>
+                                <file>
+                                    <path>${build.bindir}/winsw.xml</path>
+                                    <lines>
+                                        <line><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<service>
+    <id>${project.artifactId}</id>
+    <name>${project.artifactId}</name>
+    <description>${winsvc.service.description}</description>
+    <executable>${winsvc.service.exe}</executable>
+    <arguments>-Dfile.encoding="UTF-8" -jar "%BASE%\..\${winsvc.service.jar}"</arguments>
+    <workingdirectory>%BASE%\..\</workingdirectory>
+    <logpath>%BASE%\..\logs</logpath>
+    <log mode="${winsvc.service.log.mode}">
+            ${winsvc.service.log.settings}
+    </log>
+</service>]]>
+                                        </line>
+                                    </lines>
+                                </file>
+                                <file>
+                                    <path>${dist.dir}/configuration.xml</path>
+                                    <lines>
+                                        <line>
+                                            <![CDATA[<Configuration>
+    <url>https://svd.alta.ru</url>
+    <serverUsername>serveralta</serverUsername>
+    <connectionTimeout>10000</connectionTimeout>
+    <socketTimeout>30000</socketTimeout>
+    <encryptionType/>
+    <serverMode>TIMER</serverMode>
+    <pushServerUrl/>
+    <operationLogDays>7</operationLogDays>
+    <proxy/>
+    <accounts/>
+</Configuration>]]>
+                                        </line>
+                                    </lines>
+                                </file>
+                            </files>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>write-text-files</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>write-text-files</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <configuration>
+                                    <target>
+                                        <copy file="${build.bindir}/winsw.exe" tofile="${winsvc.exe}"/>
+                                        <copy file="${build.bindir}/winsw.xml" tofile="${winsvc.xml}"/>
+                                        <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
+                                              tofile="${dist.dir}/${winsvc.service.jar}"/>
+                                        <copy file="${project.build.directory}/classes/img/alta_logo.ico"
+                                              tofile="${dist.dir}/alta_logo.ico"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.winsw</groupId>
+                    <artifactId>winsw</artifactId>
+                    <classifier>bin</classifier>
+                    <version>2.1.2</version>
+                    <type>exe</type>
+                </dependency>
+            </dependencies>
+            <repositories>
+                <repository>
+                    <id>jenkins</id>
+                    <name>Jenkins Repository</name>
+                    <url>http://repo.jenkins-ci.org/releases</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>Standalone</id>
+            <properties>
+                <spring.maven.prop.profile>Standalone</spring.maven.prop.profile>
+            </properties>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>JWS</id>
+            <properties>
+                <spring.maven.prop.profile>JWS</spring.maven.prop.profile>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>true</skip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>webstart-maven-plugin</artifactId>
+                        <version>1.0-beta-6</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jnlp</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+
+                            <pack200>
+                                <enabled>false</enabled>
+                            </pack200>
+
+                            <updateManifestEntries>
+                                <Permissions>all-permissions</Permissions>
+                                <Trusted-Library>true</Trusted-Library>
+                                <Application-Name>SvdClient</Application-Name>
+                                <Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
+                                <Codebase>*</Codebase>
+                                <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
+                            </updateManifestEntries>
+
+                            <excludeTransitive>false</excludeTransitive>
+
+                            <libPath>lib</libPath>
+
+                            <codebase>file:/${project.build.directory}/jnlp</codebase>
+
+                            <jnlp>
+                                <!--<inputTemplate>src/main/jnlp/template.vm</inputTemplate>-->
+                                <outputFile>SvdClient.jnlp</outputFile>
+                                <mainClass>ru.alta.svd.client.web.main.main.SvdClientWebApplication</mainClass>
+                                <inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath>
+
+                            </jnlp>
+
+                            <sign>
+                                <keystore>${basedir}/test_keystore.jks</keystore>
+                                <keypass></keypass>
+                                <storepass>testpass</storepass>
+                                <alias>test-key</alias>
+                                <verify>true</verify>
+                            </sign>
+
+
+                            <verbose>false</verbose>
+
+                        </configuration>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>keytool-api-1.7</artifactId>
+                                <version>1.5</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link rel="icon" type="image/png" href="/design/img/favicon-16x16.png" sizes="16x16">
+    <link href="/design/css/style.min.css" rel="stylesheet">
+    <script src="/design/js/production.js"></script>
+    <script src="/design/js/lib/libs.js"></script>
+    <title>СВД-клиент</title>
+</head>
+<body>
+<div class="container">
+    <header class="header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+            <div class="col-4 pt-1">
+                <a class="text-muted" href="#">
+                    <picture>
+                        <img alt="СВД веб-клиент" height="73" src="/design/img/logo.png" srcset="/design/img/logo.png,
+                         /design/img/logo@2x.png 2x"
+                             width="276">
+                    </picture>
+                </a>
+            </div>
+            <div class="col-4 text-center">
+                <a class="text-dark" href="#"></a>
+            </div>
+            <div class="col-4 d-flex justify-content-end align-items-end flex-column jInfoContainer">
+                <div class="h3">СВД-клиент</div>
+                <div class="text-secondary invisible">
+                    Версия <span class="jClientVersion">x.x.x</span> от <span class="jClientBuild">xx.xx.xxxx</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light jNavbarContainer">
+        <div class="nav nav-pills justify-content-end" id="nav-tab" role="tablist">
+            <a aria-controls="nav-config"
+               aria-selected="true"
+               class="nav-item nav-link active"
+               data-toggle="tab"
+               href="#nav-config"
+               id="nav-config-tab"
+               role="tab">
+                Настройки
+            </a>
+            <a aria-controls="nav-receive"
+               aria-selected="false"
+               class="nav-item nav-link"
+               data-toggle="tab"
+               data-type="receive"
+               href="#nav-receive"
+               id="nav-receive-tab"
+               role="tab">
+                Прием
+            </a>
+            <a aria-controls="nav-send"
+               aria-selected="false"
+               class="nav-item nav-link"
+               data-toggle="tab"
+               data-type="send"
+               href="#nav-send"
+               id="nav-send-tab"
+               role="tab">
+                Отправка
+            </a>
+        </div>
+        <span class="navbar-brand ml-auto" href="#"><i class="fas fa-cat transparent"></i></span>
+    </nav>
+    <div class="tab-content py-4" id="nav-tabContent">
+        <div aria-labelledby="nav-config-tab" class="tab-pane fade show active" id="nav-config" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <form class="jConfigContainer loader" enctype="multipart/form-data" method="post"
+                          name="jConfigContainer">
+                        <fieldset class="jConfigCommon">
+                            <legend>Общие</legend>
+                            <div class="form-row align-bottom">
+                                <div class="form-group col-sm-6 col-xl-4">
+                                    <div class="">
+                                        <label class="mt-xl-4" for="url">SVD</label>
+                                        <input class="form-control"
+                                               id="url"
+                                               name="url"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6 col-xl-2">
+                                    <label class="mt-xl-4" for="serverUsername">Логин сервера</label>
+                                    <input class="form-control"
+                                           id="serverUsername"
+                                           name="serverUsername"
+                                           type="text">
+                                </div>
+                                <div class="form-group col-sm-4 col-xl-2">
+                                    <label class="mt-md-4 mt-lg-auto" for="connectionTimeout">Таймаут при
+                                        соединении</label>
+                                    <input aria-describedby="connectionTimeoutHelp"
+                                           class="form-control"
+                                           id="connectionTimeout"
+                                           name="connectionTimeout"
+                                           type="number">
+                                    <small class="form-text text-muted" id="connectionTimeoutHelp">в секундах</small>
+                                </div>
+                                <div class="form-group col-sm-4 col-xl-2">
+                                    <label for="socketTimeout">Таймаут при передаче&nbsp;данных</label>
+                                    <input aria-describedby="socketTimeoutHelp"
+                                           class="form-control"
+                                           id="socketTimeout"
+                                           name="socketTimeout"
+                                           type="number">
+                                    <small class="form-text text-muted" id="socketTimeoutHelp">в секундах</small>
+                                </div>
+                                <div class="form-group col-sm-4 col-xl-2">
+                                    <label for="operationLogDays">Срок хранения лога&nbsp;операций</label>
+                                    <input aria-describedby="operationLogDaysHelp"
+                                           class="form-control"
+                                           id="operationLogDays"
+                                           name="operationLogDays"
+                                           type="number">
+                                    <small class="form-text text-muted" id="operationLogDaysHelp">в днях</small>
+                                </div>
+                                <div class="form-group col-sm-6 col-md-4 col-xl-2">
+                                    <label for="serverMode">Режим опроса</label>
+                                    <select class="form-control" id="serverMode" name="serverMode">
+                                        <option>TIMER</option>
+                                        <option>PUSH</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4 col-xl-4 d-none">
+                                    <label for="pushServerUrl">PUSH сервер</label>
+                                    <input class="form-control"
+                                           id="pushServerUrl"
+                                           name="pushServerUrl"
+                                           type="text">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <fieldset class="my-4 jStatusProxy">
+                            <div class="form-row">
+                                <div class="col-sm-3">
+                                    <legend>Прокси</legend>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-check float-right">
+                                        <input class="form-check-input"
+                                               id="active"
+                                               name="proxy_active"
+                                               type="checkbox"
+                                               value="true">
+                                        <label class="form-check-label" for="active">
+                                            Использовать прокси-сервер
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="jConfigProxy">
+                            <div class="form-row">
+                                <div class="form-group col-sm-9 col-xl-3">
+                                    <div class="">
+                                        <label for="proxyUrl">Сервер</label>
+                                        <input class="form-control"
+                                               id="proxyUrl"
+                                               name="proxy_url"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3 col-xl-1">
+                                    <label for="port">Порт</label>
+                                    <input class="form-control"
+                                           id="port"
+                                           name="proxy_port"
+                                           type="number">
+                                </div>
+                                <div class="form-group col-sm-6 col-md-4 col-xl-3">
+                                    <label for="login">Пользователь</label>
+                                    <input class="form-control"
+                                           id="login"
+                                           name="proxy_login"
+                                           type="text">
+                                </div>
+                                <div class="form-group col-sm-6 col-md-4 col-xl-3">
+                                    <label for="password">Пароль</label>
+                                    <input class="form-control"
+                                           id="password"
+                                           name="proxy_password"
+                                           type="text">
+                                </div>
+                                <div class="form-group col-sm-6 col-md-4 col-xl-2">
+                                    <label for="authType">Тип аутентификации</label>
+                                    <select class="form-control" id="authType" name="proxy_authType">
+                                        <option>Basic</option>
+                                        <option>NTLM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <fieldset>
+                            <button class="btn btn-success jConfigSubmitButton" type="button">Сохранить настройки
+                            </button>
+                            <button class="btn btn-outline-primary jConfigExportButton" type="button">Экспортировать
+                                настройки в файл
+                            </button>
+                            <label class="btn btn-outline-success mb-0" for="importFile">Импортировать настройки из
+                                файла</label>
+                            <input class="jConfigImportInput" hidden id="importFile" name="importFile" type="file">
+                            <button class="btn btn-outline-info jConfigHistoryButton d-none"
+                                    type="button"
+                                    data-target="#historyModal"
+                                    data-toggle="modal"
+                                    disabled>Предыдущие версии
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="card my-4">
+                <div class="card-body">
+                    <form class="jAccountsContainer loader">
+                        <fieldset>
+                            <legend>Список аккаунтов</legend>
+                            <div class="form-row">
+                                <table class="table jAccountsTable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Логин</th>
+                                        <th class="d-none d-sm-table-cell" scope="col">Пароль</th>
+                                        <th class="d-none d-sm-table-cell" scope="col">ID сервера</th>
+                                        <th class="d-none d-lg-table-cell" scope="col">Директория для отправки</th>
+                                        <th class="d-none d-lg-table-cell" scope="col">Директория для приема</th>
+                                        <th class="d-none d-lg-table-cell toggleInterval" scope="col">Интервал опроса
+                                            (сек.)
+                                        </th>
+                                        <th class="d-none d-lg-table-cell" scope="col">Тип сообщения</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-success jAccountAddButton"
+                                    data-target="#accountModal"
+                                    data-title="Создание"
+                                    data-toggle="modal"
+                                    type="button">Добавить аккаунт
+                            </button>
+                            <label class="btn btn-outline-success mb-0" for="importAccount">Импортировать аккаунт из
+                                файла</label>
+                            <input class="jAccountImportInput" hidden id="importAccount" name="importAccount"
+                                   type="file">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div aria-labelledby="nav-receive-tab" class="tab-pane fade" id="nav-receive" role="tabpanel">
+            <section class="jReceiveContainer">
+                <form class="form-inline jOperationsFilter">
+                    <div class="form-group">
+                        <label class="my-3 mr-2 ml-sm-3" for="receiveFilterLogin">Логин</label>
+                        <select class="custom-select my-3 mr-sm-2"
+                                id="receiveFilterLogin"
+                                name="filterLogin">
+                        </select>
+                    </div>
+                </form>
+                <table class="table table-responsive-sm jOperationsTable">
+                    <thead>
+                    <tr>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Длительность</th>
+                        <th scope="col">Логин</th>
+                        <th scope="col">Файл</th>
+                        <th scope="col">Размер</th>
+                        <th scope="col">Результат</th>
+                        <th scope="col">Сообщение</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-12 col-xl-9 mt-3">
+                        <nav aria-label="Навигация по страницам журнала операций">
+                            <ul class="pagination jPaginationContainer"></ul>
+                        </nav>
+                    </div>
+                    <div class="col-sm-12 col-xl-3 d-flex">
+                        <form class="form-inline text-right ml-auto jPageOptionsContainer">
+                            <label class="my-1 mr-2" for="pageSizeReceive">Показывать по</label>
+                            <select class="custom-select my-1 jPageSize" id="pageSizeReceive">
+                                <option value="10">10</option>
+                                <option selected value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div aria-labelledby="nav-send-tab" class="tab-pane fade" id="nav-send" role="tabpanel">
+            <section class="jSendContainer">
+                <form class="form-inline jOperationsFilter">
+                    <div class="form-group">
+                        <label class="my-3 mr-2 ml-sm-3" for="sendFilterLogin">Логин</label>
+                        <select class="custom-select my-3 mr-sm-2"
+                                id="sendFilterLogin"
+                                name="filterLogin">
+                        </select>
+                    </div>
+                </form>
+                <table class="table table-responsive-sm jOperationsTable">
+                    <thead>
+                    <tr>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Длительность</th>
+                        <th scope="col">Логин</th>
+                        <th scope="col">Файл</th>
+                        <th scope="col">Размер</th>
+                        <th scope="col">Результат</th>
+                        <th scope="col">Сообщение</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-12 col-xl-9 mt-3">
+                        <nav aria-label="Навигация по страницам журнала операций">
+                            <ul class="pagination jPaginationContainer"></ul>
+                        </nav>
+                    </div>
+                    <div class="col-sm-12 col-xl-3 d-flex">
+                        <form class="form-inline text-right ml-auto jPageOptionsContainer">
+                            <!--<select class="custom-select my-1 mr-sm-2" id="pageSortSelect">
+                              <option selected value="ask">Сначала новые</option>
+                              <option value="desk">Сначала старые</option>
+                            </select>-->
+                            <label class="my-1 mr-2" for="pageSizeSend">Показывать по</label>
+                            <select class="custom-select my-1 jPageSize" id="pageSizeSend">
+                                <option value="10">10</option>
+                                <option selected value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="accountModalLabel" class="modal fade" id="accountModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountModalLabel">Настройки аккаунта</h5>
+                <button aria-label="Закрыть" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input class="form-control"
+                           hidden
+                           id="id"
+                           name="id" type="text">
+                    <div class="form-row">
+                        <div class="form-group col-sm-6 col-xl-4">
+                            <label for="accountLogin">Пользователь</label>
+                            <input class="form-control"
+                                   id="accountLogin"
+                                   name="login"
+                                   type="text">
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-4">
+                            <label for="accountPassword">Пароль</label>
+                            <input class="form-control"
+                                   id="accountPassword"
+                                   name="password"
+                                   type="text">
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-4">
+                            <label for="accountServerId">ID сервера</label>
+                            <input class="form-control"
+                                   id="accountServerId"
+                                   name="serverId"
+                                   type="text">
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-6">
+                            <label class="" for="accountSendDir">Директория для отправки</label>
+                            <div class="input-group mb-3">
+                                <input class="form-control jAccountDir"
+                                       id="accountSendDir"
+                                       name="sendDir"
+                                       type="text">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary jFolderBrowseButton"
+                                            data-target="#folderModal"
+                                            data-title="Выбор директории для отправки"
+                                            data-toggle="modal"
+                                            type="button">Выбрать
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-6">
+                            <label class="" for="accountReceiveDir">Директория для приема</label>
+                            <div class="input-group mb-3">
+                                <input class="form-control jAccountDir"
+                                       id="accountReceiveDir"
+                                       name="receiveDir"
+                                       type="text">
+                                <div class="input-group-append">
+                                    <!--<button type="button" class="btn btn-outline-secondary jFolderBrowseButton">Выбрать</button>-->
+                                    <button class="btn btn-outline-secondary jFolderBrowseButton"
+                                            data-target="#folderModal"
+                                            data-title="Выбор директории для приема"
+                                            data-toggle="modal"
+                                            type="button">Выбрать
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-3">
+                            <label for="accountRequestInterval">Интервал опроса (сек.)</label>
+                            <select class="form-control"
+                                    id="accountRequestInterval"
+                                    name="requestInterval">
+                                <option>10</option>
+                                <option>15</option>
+                                <option>20</option>
+                                <option>30</option>
+                                <option>45</option>
+                                <option>60</option>
+                                <option>90</option>
+                                <option>120</option>
+                                <option>180</option>
+                                <option>240</option>
+                                <option>300</option>
+                            </select>
+                            <input class="form-control d-none"
+                                   disabled
+                                   id="_accountRequestInterval"
+                                   name="requestInterval"
+                                   type="number"
+                                   value="">
+                        </div>
+                        <div class="form-group col-sm-6 col-xl-3">
+                            <label class="" for="accountMsgType">Тип сообщения</label>
+                            <select class="form-control"
+                                    id="accountMsgType"
+                                    name="msgType">
+                                <option>ED</option>
+                                <option>DATA</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Отмена</button>
+                <button class="btn btn-success jAccountSubmitButton" type="button">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="folderModalLabel" class="modal fade" id="folderModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="folderModalLabel">Выбор директории</h5>
+                <button aria-label="Закрыть" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="input-group input-group-sm mb-3 col-sm-6">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-secondary btn-sm jFolderUpButton" type="button">
+                                <i aria-hidden="true" class="fa fa-level-up-alt"></i>
+                            </button>
+                        </div>
+                        <input aria-label="Путь к выбранной папке"
+                               class="form-control jFolderPathField"
+                               type="text">
+                    </div>
+                    <div class="input-group input-group-sm mb-3 col-sm-6">
+                        <button class="btn btn-secondary btn-sm jFolderRootButton" type="button">Корневая</button>&nbsp;
+                        <button class="btn btn-secondary btn-sm jFolderHomeButton" type="button">Домашняя</button>&nbsp;
+                        <button class="btn btn-secondary btn-sm jFolderProgramButton" type="button">Директория
+                            программы
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-sm">
+                    <!--<thead>
+                      <th></th>
+                      <th>Название</th>
+                      <th>Переход</th>
+                    </thead>-->
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Отмена</button>
+                <button class="btn btn-success jFolderApplyButton" type="button">Выбрать</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="confirmModalLabel" class="modal fade" id="confirmModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Удаление аккаунта</h5>
+                <button aria-label="Закрыть" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="jConfirmText">Вы действительно хотите удалить аккаунт?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Отмена</button>
+                <button class="btn btn-danger jAccountDeleteButton" type="button">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="exceptionMessageModalLabel" class="modal fade" id="exceptionMessageModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exceptionMessageModalLabel">Непредвиденная ошибка</h5>
+                <button aria-label="Закрыть" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="jExceptionMessageText"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="historyModalLabel" class="modal fade" id="historyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyModalLabel">Выбор настроек</h5>
+                <button aria-label="Закрыть" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-secondary jHistoryEmpty d-none" role="alert">
+                    Не найдено ни одного файла с настройками.
+                </div>
+                <table class="table table-sm table-hover">
+                    <!--<thead>
+                        <th></th>
+                        <th>Путь к настройкам</th>
+                    </thead>-->
+                    <tbody class="jHistory"></tbody>
+                </table>
+                <pre class="card bg-light pre-scrollable jHistoryItemConfig"></pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Отмена</button>
+                <button class="btn btn-success jHistoryApplyButton" type="button" disabled>Использовать выбранные настройки</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

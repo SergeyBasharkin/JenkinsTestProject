@@ -1,0 +1,18 @@
+svd.send.client-version=@project.version@
+
+svd.client.build-time = @timestamp@
+spring.profiles.active=@spring.maven.prop.profile@
+
+
+svd.config.oldConfigFileMasks=C:\\Users\\${user.name}\\AppData\\LocalLow\\Sun\\Java\\Deployment\\cache\\6.0\\muffin\\*.muf,C:\\Windows\\SysWOW64\\config\\systemprofile\\.jaltahttp\\,C:\\Users\\${user.name}\\.jaltahttp\\Configxml.xml
+svd.tray.img-path=/img/pic.png
+svd.tray.tooltip=SVD Client
+
+svd.client.db = ./data/configuration.xml
+
+server.port=0
+server.address=127.0.0.1
+
+logging.level.org.apache.activemq=error
+logging.level.ru.alta.svd.transport.protocol.camel.consumer=off
+logging.level.org.apache.camel=error

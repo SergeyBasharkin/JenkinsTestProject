@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <url>https://svd.alta.ru</url>
+    <serverUsername>serveralta</serverUsername>
+    <connectionTimeout>10000</connectionTimeout>
+    <socketTimeout>10000</socketTimeout>
+    <encryptionType>RSA</encryptionType>
+    <serverMode>TIMER</serverMode>
+    <proxy>
+        <active>false</active>
+        <port>0</port>
+        <password></password>
+        <authScheme>BASIC</authScheme>
+    </proxy>
+    <accounts>
+        <account>
+            <login>pechenko</login>
+            <password>123</password>
+            <serverId>a90c1981-5e14-4d03-b4ec-4918d1d3b556</serverId>
+            <sendDir>/home/pechenko/SVD/outbox</sendDir>
+            <receiveDir>/home/pechenko/SVD/inbox</receiveDir>
+            <requestInteval>5000</requestInteval>
+            <signature></signature>
+        </account>
+    </accounts>
+</configuration>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/svd-client.iml" filepath="$PROJECT_DIR$/svd-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svd-client-core/svd-client-core.iml" filepath="$PROJECT_DIR$/svd-client-core/svd-client-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svd-client-rest/svd-client-rest.iml" filepath="$PROJECT_DIR$/svd-client-rest/svd-client-rest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svd-client-web/svd-client-web.iml" filepath="$PROJECT_DIR$/svd-client-web/svd-client-web.iml" />
+    </modules>
+  </component>
+</project>
